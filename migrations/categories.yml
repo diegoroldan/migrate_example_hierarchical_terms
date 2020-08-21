@@ -1,0 +1,39 @@
+id: categories
+label: Article Categories.
+migration_group: hierarchical_terms
+migration_tags:
+  - taxonomy
+source:
+  plugin: 'csv'
+  path: 'modules/custom/migrate_example_hierarchical_terms/data/categories.csv'
+  delimiter: ','
+  enclosure: '"'
+  header_offset: 0
+  ids:
+    - name
+  fields:
+    0:
+      name: name
+      label: 'Name'
+    1:
+      name: description
+      label: 'Description'
+    2:
+      name: parent
+      label: 'Parent'
+
+process:
+  name: name
+  description: description
+  parent:
+    -
+      plugin: migration_lookup
+      migration: categories
+      source: parent
+    -
+      plugin: default_value
+      default_value: 0
+
+destination:
+  plugin: 'entity:taxonomy_term'
+  default_bundle: categories
